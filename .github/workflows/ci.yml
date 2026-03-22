@@ -1,0 +1,24 @@
+name: Java Direct Compile Check
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  check-style:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '25'
+          distribution: 'temurin'
+
+      - name: Compile with javac
+        run: |
+          # 全てのJavaファイルを一括でコンパイルしてみる
+          # もしAファイルのメソッド名が変わっていて、Cファイルが古い名前を呼んでいれば
+          # ここでエラーコード 1 が返り、GitHub Actions が停止（失敗）します。
+          find src -name "*.java" | xargs javac -d out
